@@ -1,6 +1,8 @@
 
 
-## SequenceDiagram
+## Sequence Diagrams:
+
+**Seq 5:**
 ```mermaid
    
 sequenceDiagram
@@ -33,3 +35,37 @@ sequenceDiagram
     end
 
 ```
+
+
+**Seq 7:**
+
+```mermaid
+   
+sequenceDiagram
+    autonumber
+    actor U as User
+    participant App as Mobile App
+    participant API as ASP.NET Core API
+    participant DB as SQL Server
+
+    U->>App: Open Alerts Page
+    App->>API: GET /api/alerts
+    API->>DB: Retrieve saved alerts
+    DB-->>API: Return alerts list
+    API-->>App: Return alerts as JSON
+    App->>App: Process alerts data
+
+    alt Alerts exist
+        App-->>U: Display alerts list
+    else No alerts found
+        App-->>U: Display No Alerts message
+    end
+
+    U->>App: Select an alert
+    App-->>U: Display alert details
+
+```
+
+
+
+
