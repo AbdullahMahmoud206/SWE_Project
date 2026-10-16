@@ -3,6 +3,8 @@
 ## SequenceDiagram
 ```mermaid
    
+sequenceDiagram
+    autonumber
     actor U as User
     participant App as Mobile App
     participant API as ASP.NET Core API
@@ -29,4 +31,5 @@
         API-->>App: 200 OK
         App-->>U: Display success message
     end
+
 ```
