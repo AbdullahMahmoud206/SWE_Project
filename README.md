@@ -2,5 +2,5 @@
 
 ## Diagrams:
 - **Use case:** ``UseCaseDiagram.md``
-- **Sequencce:** ``SequenceDiagram.md`` 
+- **Sequence:** ``SequenceDiagram.md`` 
   
