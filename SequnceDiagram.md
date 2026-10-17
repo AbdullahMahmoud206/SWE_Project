@@ -1,8 +1,18 @@
 
 
-## Sequence Diagrams:
+# Sequence Diagrams:
 
-**Seq 5:**
+
+
+## Sequence 5: Configure Alert Thresholds
+**Participants:** 
+- User: The user who defines the alert boundaries.
+
+- Mobile App: The mobile application that displays and sends the settings.
+
+- ASP.NET Core API: Receives the request and verifies the values.
+
+- SQL Server: Saves the alert boundaries in the database.
 ```mermaid
    
 sequenceDiagram
@@ -37,7 +47,7 @@ sequenceDiagram
 ```
 
 
-**Seq 7:**
+**Sequence 7: View Alerts**
 
 ```mermaid
    
