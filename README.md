@@ -5,6 +5,9 @@
 
 
 ## Diagrams:
-- **Use case:** [UseCaseDiagram.md](UseCaseDiagram.md)
-- **Sequence:** [SequenceDiagram.md](SequenceDiagram.md)
-  
+- **Use case:** 
+    - [UseCaseDiagram.md](UseCaseDiagram.md)
+    
+- **Sequence:** 
+     - [SequenceDiagram.md](SequenceDiagram.md)
+     - [smart_env_station_OT.md](smart_env_station_OT.md)
