@@ -1,5 +1,5 @@
 ## Sequence 1: Device scanning
-### participant:
+### Participant:
 - **Home Owner:** The user who wants to scan a device.
 - **Mobile App:** The UI that send the scan request.
 - **Web API:** Receives the request and responses with a device list.
@@ -24,6 +24,11 @@ sequenceDiagram
 ```
 
 ## Sequence 2: ESP32 Connection
+### Participant:
+- **Home Owner:** The user who wants to connect with ESP32 device.
+- **Mobile App:** The UI that requests connection.
+- **Web API:** Connects with ESP32 device, check connection, and give the response.
+- **ESP32:** Tests connectivity with sensors and give action result to the API.   
 
 ```mermaid
 
