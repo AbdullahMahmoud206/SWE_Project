@@ -1,8 +1,8 @@
 ## Sequence 1: Device scanning
 ### participant:
-- **Home Owner:** The user who sends a scan request.
-- **Mobile App:** 
-- **Web API:**
+- **Home Owner:** The user who wants to scan a device.
+- **Mobile App:** The UI that send the scan request.
+- **Web API:** Receives the request and responses with a device list.
 
 ```mermaid
 sequenceDiagram
