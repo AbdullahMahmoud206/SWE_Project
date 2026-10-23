@@ -31,7 +31,7 @@ sequenceDiagram
         deactivate App
         deactivate User
     end
-```[cite: 4]
+```
 
 
 
