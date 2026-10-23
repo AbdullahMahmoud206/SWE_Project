@@ -1,8 +1,8 @@
 
 
 # Sequence Diagrams:
-
-## Diagram 1: Request Connection Flow
+> First 5 for student: Omar Tamer
+### Diagram 1: Request Connection Flow
 ```mermaid
 sequenceDiagram
     participant User as User:
@@ -32,6 +32,118 @@ sequenceDiagram
         deactivate User
     end
 ```
+### Diagram 2: Read TMT6000 Sensor Data
+
+```mermaid
+sequenceDiagram
+    participant ESP32 as ESP32:
+    participant GPIO as GPIO:
+    participant TMT6000 as TMT6000 Sensor:
+
+    activate ESP32
+    ESP32->>GPIO: Read Sensor
+    activate GPIO
+    GPIO->>TMT6000: 
+    activate TMT6000
+    TMT6000-->>GPIO: Readings
+    deactivate TMT6000
+    GPIO-->>ESP32: Readings
+    deactivate GPIO
+    ESP32->>ESP32: Prepare Readings To Be Sent
+    deactivate ESP32
+```
+
+### Diagram 3: Read DHT11 Sensor Data
+
+```mermaid
+sequenceDiagram
+    participant ESP32 as ESP32:
+    participant GPIO as GPIO:
+    participant DHT11 as DHT11 Sensor:
+
+    activate ESP32
+    ESP32->>GPIO: Read Sensor
+    activate GPIO
+    GPIO->>DHT11: 
+    activate DHT11
+    DHT11-->>GPIO: Readings
+    deactivate DHT11
+    GPIO-->>ESP32: Readings
+    deactivate GPIO
+    ESP32->>ESP32: Prepare Readings To Be Sent
+    deactivate ESP32
+```
+### Diagram 4: Device Scan Flow
+
+```mermaid
+sequenceDiagram
+    participant User as User:
+    participant App as App:
+    participant API as API:
+
+    activate User
+    User->>App: Request device scan
+    activate App
+    App->>API: Request device scan
+    activate API
+    API->>API: Scan for devices
+
+    alt Devices Found
+        API-->>App: Device list
+        App-->>User: Device list
+    else No Devices Found
+        API-->>App: No devices found
+        deactivate API
+        App-->>User: No devices found
+        deactivate App
+        deactivate User
+    end
+```
+
+### Diagram 5: Sensor Connection Testing
+```mermaid
+sequenceDiagram
+    participant ESP32 as ESP32:
+    participant GPIO as GPIO:
+    participant DH11 as DH11 Sensor:
+    participant TEMT6000 as TEMT6000 Sensor:
+
+    activate ESP32
+    ESP32->>GPIO: Initialize GPIO
+    activate GPIO
+    deactivate GPIO
+
+    ESP32->>GPIO: Test Sensor Connection
+    activate GPIO
+    GPIO->>DH11: 
+    activate DH11
+
+    alt DH11 Connected
+        DH11-->>GPIO: Connected
+        GPIO-->>ESP32: Connected
+    else DH11 Not Connected
+        DH11-->>GPIO: Not Connected
+        deactivate DH11
+        GPIO-->>ESP32: Not Connected
+        deactivate GPIO
+    end
+
+    ESP32->>GPIO: Test Sensor Connection
+    activate GPIO
+    GPIO->>TEMT6000: Test Sensor Connection
+    activate TEMT6000
+
+    alt TEMT6000 Connected
+        TEMT6000-->>GPIO: Connected
+        GPIO-->>ESP32: Connected
+    else TEMT6000 Not Connected
+        TEMT6000-->>GPIO: Not Connected
+        deactivate TEMT6000
+        GPIO-->>ESP32: Not Connected
+        deactivate GPIO
+    end
+    deactivate ESP32
+```
 
 
 
@@ -45,6 +157,8 @@ sequenceDiagram
 
 - **SQL Server:** Saves the alert boundaries in the database.
 ```mermaid
+
+
    
 sequenceDiagram
     autonumber
