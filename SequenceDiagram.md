@@ -1,8 +1,8 @@
 
-
-# Sequence Diagrams:
+# Smart Environment station  
+## Sequence Diagrams:
 > First 5 for student: Omar Tamer
-### Diagram 1: Request Connection Flow
+### 1: Request Connection Flow
 ```mermaid
 sequenceDiagram
     participant User as User:
@@ -32,7 +32,7 @@ sequenceDiagram
         deactivate User
     end
 ```
-### Diagram 2: Read TMT6000 Sensor Data
+### 2: Read TMT6000 Sensor Data
 
 ```mermaid
 sequenceDiagram
@@ -53,7 +53,7 @@ sequenceDiagram
     deactivate ESP32
 ```
 
-### Diagram 3: Read DHT11 Sensor Data
+### 3: Read DHT11 Sensor Data
 
 ```mermaid
 sequenceDiagram
@@ -73,7 +73,7 @@ sequenceDiagram
     ESP32->>ESP32: Prepare Readings To Be Sent
     deactivate ESP32
 ```
-### Diagram 4: Device Scan Flow
+### 4: Device Scan Flow
 
 ```mermaid
 sequenceDiagram
@@ -100,7 +100,7 @@ sequenceDiagram
     end
 ```
 
-### Diagram 5: Sensor Connection Testing
+### 5: Sensor Connection Testing
 ```mermaid
 sequenceDiagram
     participant ESP32 as ESP32:
@@ -145,21 +145,64 @@ sequenceDiagram
     deactivate ESP32
 ```
 
-
-
-## Diagram 5: Configure Alert Thresholds
-### Participants:
-- **User:** The user who defines the alert boundaries.
-
-- **Mobile App:** The mobile application that displays and sends the settings.
-
-- **ASP.NET Core API:** Receives the request and verifies the values.
-
-- **SQL Server:** Saves the alert boundaries in the database.
+> 6, 7 Student: Omar Ismail
+### 6: Alert Notification Loop
 ```mermaid
+sequenceDiagram
+    actor User
+    participant Application
+    participant API
+    participant ESP32
+    participant Database
 
+    activate ESP32
+    loop Loop
+        ESP32->>ESP32: Checking Thresholds
+        alt If Threshold exceeded
+            ESP32->>ESP32: Thresholds exceeded
+            ESP32->>API: Send Alert signals
+            activate API
+            API->>Database: Store Alert date & values
+            activate Database
+            API->>Application: Display Alert notification
+            activate Application
+            Application->>User: Display Alert notification
+            activate User
+            deactivate User
+            deactivate Application
+            deactivate Database
+            deactivate API
+        else else
+            ESP32->>ESP32: Checking Thresholds
+        end
+    end
+    deactivate ESP32
+```
+### 7: Send sensor data
+```mermaid
+sequenceDiagram
+    participant ESP32
+    participant API
+    participant Database
 
-   
+    activate ESP32
+    activate API
+    activate Database
+    loop Loop
+        ESP32->>ESP32: Reading sensors
+        ESP32->>ESP32: Validating Data
+        ESP32->>API: Send Sensor Data
+        API->>Database: Store data
+        Database-->>API: Storing Confirmation
+    end
+    deactivate Database
+    deactivate API
+    deactivate ESP32
+```
+
+> 8, 9 student: [Abdullah Mahmoud](https://github.com/AbdullahMahmoud206)
+### 8: Configure Alert Thresholds
+```mermaid
 sequenceDiagram
     autonumber
     actor U as User
@@ -192,15 +235,7 @@ sequenceDiagram
 ```
 
 
-## Sequence 7: View Alerts
-### Participants:
-- **User:** The user who wants to view the alerts.
-
-- **Mobile App:** The mobile application that displays the list of alerts.
-
-- **ASP.NET Core API:** Receives the application request and retrieves the alerts.
-
-- **SQL Server:** The database that stores the recorded alerts.
+### 9: View Alerts
 ```mermaid
    
 sequenceDiagram
