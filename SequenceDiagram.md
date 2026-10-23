@@ -2,9 +2,40 @@
 
 # Sequence Diagrams:
 
+## Diagram 1: Request Connection Flow
+```mermaid
+sequenceDiagram
+    participant User as User:
+    participant App as App:
+    participant API as API:
+    participant ESP32 as ESP32:
+
+    activate User
+    User->>App: Request connection
+    activate App
+    App->>API: Request connection
+    activate API
+    API->>ESP32: Request connection
+    activate ESP32
+
+    alt Connection Success
+        ESP32-->>API: Connection success
+        API-->>App: Connection success
+        App-->>User: Connection success
+    else Connection Failure
+        ESP32-->>API: Connection failure
+        deactivate ESP32
+        API-->>App: Connection failure
+        deactivate API
+        App-->>User: Connection failure
+        deactivate App
+        deactivate User
+    end
+```[cite: 4]
 
 
-## Sequence 5: Configure Alert Thresholds
+
+## Diagram 5: Configure Alert Thresholds
 ### Participants:
 - **User:** The user who defines the alert boundaries.
 
