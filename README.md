@@ -8,11 +8,10 @@
 
 
 
-    
+## Diagrams:    
+
 - **Sequence:** 
      - [SequenceDiagram.md](SequenceDiagram.md)
-    
-## Diagrams:
 - **Use case:** 
     - [UseCaseDiagram.md](UseCaseDiagram.md)
 
