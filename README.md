@@ -11,10 +11,11 @@
 ## Diagrams:    
 
 - **Sequence:** 
-     - [SequenceDiagram.md](SequenceDiagram.md)
+     - [SequenceDiagram.md](Diagrams/SequenceDiagram.md)
 - **Use case:** 
-    - [UseCaseDiagram.md](UseCaseDiagram.md)
-
+    - [UseCaseDiagram.md](Diagrams/UseCaseDiagram.md)
+- **State:** 
+    - [State_Diagram.md](Diagrams/State_Diagram.md)
 
 
 ## Academic Context
