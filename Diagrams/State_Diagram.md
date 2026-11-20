@@ -30,10 +30,10 @@ stateDiagram-v2
 | :--- | :--- | :--- |
 | **NotMeasured** | The measurements have not been taken yet. | `Entry: SensorsOff()` |
 | **Measuring** | The measurements are currently being taken. | `Entry: SensorsOn()` |
-| **Valid** | The measurements are valid. | `Entry: ValidateMeasurement()` |
-| **Invalid** | The measurements are invalid. | `Entry: ValidateMeasurement()` |
+| **Valid** | The measurements argumnets are valid. | `Entry: ValidateMeasurement()` |
+| **Invalid** | The measurements arguments are invalid. | `Entry: ValidateMeasurement()` |
 | **Stored_In_DB** | The measurements are stored in the database. | `Entry: StoreMeasurement()` |
-| **Showed** | The measurements are displayed. | `Entry: DisplayMeasurement()` |
+| **Showed** | The measurements are displayed through Mobile App . | `Entry: DisplayMeasurement()` |
 | **ThresholdExceeded** | The measurements have exceeded the threshold. | `Entry: CheckThreshold()` |
 | **NotThresholdExceeded** | The measurements have not exceeded the threshold. | `Entry: CheckThreshold()` |
 | **Notified** | An alert has been notified. | `Entry: AlertNotification()` |
