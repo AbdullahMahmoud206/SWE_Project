@@ -13,7 +13,7 @@ stateDiagram-v2
     Measuring --> Invalid : ValidateMeasurement()
     Invalid --> Measuring : ReMeasure()
 
-    Valid --> NotThresholdExceeded : CheckThresho()
+    Valid --> NotThresholdExceeded : CheckThreshold()
     Valid --> ThresholdExceeded : CheckThreshold()
 
     NotThresholdExceeded --> Stored_In_DB : StoreMeasurement()
