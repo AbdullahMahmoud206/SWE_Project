@@ -221,4 +221,4 @@ stateDiagram-v2
 
     merge_final --> [*]
 
-```mermaid
+```
