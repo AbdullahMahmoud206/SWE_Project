@@ -1,4 +1,6 @@
 # Smart Environment Station
+
+
 ## Activity Diagram 1: ESP32 Initialization & Sensor Check
 > Eng. Omar Ismail
 
@@ -139,4 +141,84 @@ stateDiagram-v2
     merge_end --> Done
     Done --> [*]
 ```
+---
+## Diagram 5 - Threshold Alert Decision and Alert Suppression
+> Eng. Abdullah Mahmoud
+```mermaid
+stateDiagram-v2
+    direction TB
 
+    state "Receive Sensor Reading" as Receive
+    state "Check Threshold" as CheckThresh
+    state threshold_choice <<choice>>
+    state "Check Existing Alert" as CheckExisting
+    state "No Alert Required" as NoAlert
+    state existing_choice <<choice>>
+    state "Skip Duplicate Alert" as SkipAlert
+    state "Generate Alert" as GenAlert
+    state "Store Alert in Database" as StoreAlert
+    state merge_inner <<choice>>
+    state merge_outer <<choice>>
+
+    [*] --> Receive
+    Receive --> CheckThresh
+    CheckThresh --> threshold_choice : Reading exceeds threshold?
+    
+    threshold_choice --> CheckExisting : Yes
+    threshold_choice --> NoAlert : No
+    
+    CheckExisting --> existing_choice : Alert already exists?
+    existing_choice --> SkipAlert : Yes
+    existing_choice --> GenAlert : No
+    
+    GenAlert --> StoreAlert
+    
+    SkipAlert --> merge_inner
+    StoreAlert --> merge_inner
+    
+    merge_inner --> merge_outer
+    NoAlert --> merge_outer
+    
+    merge_outer --> [*]
+```
+
+## Diagram 8 - Environmental Data Synchronization
+```mermaid
+stateDiagram-v2
+    direction TB
+
+    state "Receive Sensor Readings" as Receive
+    state "Update Current Readings" as Update
+    state "Prepare Data for Storage" as Prepare
+    state "Save Readings to Database" as Save
+    state save_choice <<choice>>
+    state "Confirm Data Saved" as ConfirmLeft
+    state "Mark Data as Pending" as MarkPending
+    state retry_choice <<choice>>
+    state "Retry Saving" as Retry
+    state "Check Saving Result" as CheckResult
+    state "Confirm Data Saved" as ConfirmRight
+    state merge_final <<choice>>
+
+    [*] --> Receive
+    Receive --> Update
+    Update --> Prepare
+    Prepare --> Save
+    Save --> save_choice : Was saving successful?
+
+    save_choice --> ConfirmLeft : Yes
+    save_choice --> MarkPending : No
+
+    MarkPending --> retry_choice : Saving unsuccessful?
+    retry_choice --> Retry : Yes
+    retry_choice --> ConfirmRight : No
+
+    Retry --> CheckResult
+    CheckResult --> retry_choice
+
+    ConfirmLeft --> merge_final
+    ConfirmRight --> merge_final
+
+    merge_final --> [*]
+
+```mermaid
