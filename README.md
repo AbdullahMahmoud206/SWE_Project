@@ -16,7 +16,8 @@
     - [UseCaseDiagram.md](Diagrams/UseCaseDiagram.md)
 - **State:** 
     - [State_Diagram.md](Diagrams/State_Diagram.md)
-
+- **Activity:**
+     - [Activity_Diagrams.md](Diagrams/Activity_Diagrams)
 
 ## Academic Context
 
