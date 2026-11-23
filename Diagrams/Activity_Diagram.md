@@ -3,7 +3,7 @@
 - [Diagram 1](#diagram-1---dashboard-readings-and-alert-flow), [Diagram 4](#diagram-4---handling-multiple-threshold-violations) Eng. Omar Emad
 - [Diagram 2](#diagram-2-esp32-initialization--sensor-check), [Diagram 3](#diagram-3-connection-request--device-scan) Eng. Omar Ismail
 - [Diagram 5](#diagram-5---threshold-alert-decision-and-alert-suppression), [Diagram 6](#diagram-6---environmental-data-synchronization) Eng. Abdullah Mahmoud
-- [Diagram 7](#diagram-7---environmental-monitoring-session-life-cycle) Eng. Omar Tamer
+- [Diagram 7](#diagram-7---environmental-monitoring-session-life-cycle), [Diagram 8](#diagram-8---ai-model-integration-for-historical-data-analysis) Eng. Omar Tamer
 
 ## Diagram 2: ESP32 Initialization & Sensor Check
 > Eng. Omar Ismail
@@ -392,6 +392,65 @@ stateDiagram-v2
     join_main --> SendData
     SendData --> StartNode
 ```
+## Diagram 8 - AI Model Integration for Historical Data Analysis
+> Eng. Omar Tamer
 
+```mermaid
+stateDiagram-v2
+    direction TB
+
+    state "Select Time Period & Request Analysis" as SelectPeriod
+    state "Fetch Readings from Database" as FetchData
+    state data_check <<choice>>
+    state "Notify: Insufficient Data for Analysis" as NoData
+
+    state "Clean & Format Data (JSON/Summary)" as PrepData
+    state "Send Data to External AI Model (API)" as SendAI
+    state api_check <<choice>>
+    state "Log API Error / Retry Mechanism" as HandleError
+
+    state "External AI Processing" as AIProcess {
+        direction TB
+        state "Analyze Historical Trends & Patterns" as TrendAnalysis
+        state "Detect Anomalies & Correlations" as AnomalyDetect
+        state "Generate Decisions, Recommendations & Insights" as GenInsights
+        
+        TrendAnalysis --> AnomalyDetect
+        AnomalyDetect --> GenInsights
+    }
+
+    state "Receive & Parse AI Response" as ParseResponse
+    state fork_output <<fork>>
+    state "Store Insights & Recommendations in DB" as StoreInsights
+    state "Display Insights / Trigger Actions on UI" as DisplayUI
+    state join_output <<join>>
+    state merge_end <<choice>>
+
+    [*] --> SelectPeriod
+    SelectPeriod --> FetchData
+    FetchData --> data_check : Readings available?
+
+    data_check --> NoData : No
+    NoData --> merge_end
+
+    data_check --> PrepData : Yes
+    PrepData --> SendAI
+    SendAI --> api_check : Response received?
+
+    api_check --> HandleError : No (Timeout/Error)
+    HandleError --> merge_end
+
+    api_check --> AIProcess : Yes (200 OK)
+    AIProcess --> ParseResponse
+    ParseResponse --> fork_output
+
+    fork_output --> StoreInsights
+    fork_output --> DisplayUI
+    StoreInsights --> join_output
+    DisplayUI --> join_output
+
+    join_output --> merge_end
+    merge_end --> [*]
+```
 
 
