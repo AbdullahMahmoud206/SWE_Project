@@ -1,7 +1,11 @@
-# Smart Environment Station
+# Smart Environment Station - Activity Diagrams
+## This document contains the activity diagrams for the Smart Environment Station project. Each diagram represents a specific workflow or process within the system, providing a visual representation of the activities and their interactions.
+- [Diagram 1](#diagram-1---dashboard-readings-and-alert-flow), [Diagram 4](#diagram-4---handling-multiple-threshold-violations) Eng. Omar Emad
+- [Diagram 2](#diagram-2-esp32-initialization--sensor-check), [Diagram 3](#diagram-3-connection-request--device-scan) Eng. Omar Ismail
+- [Diagram 5](#diagram-5---threshold-alert-decision-and-alert-suppression), [Diagram 6](#diagram-6---environmental-data-synchronization) Eng. Abdullah Mahmoud
+- [Diagram 7](#diagram-7---environmental-monitoring-session-life-cycle) Eng. Omar Tamer
 
-
-## Activity Diagram 1: ESP32 Initialization & Sensor Check
+## Diagram 2: ESP32 Initialization & Sensor Check
 > Eng. Omar Ismail
 
 Based on Sequence Diagram 5 (Sensor Connection Testing), Sequence Diagram 3 (Read DHT11 Sensor Data) and Sequence Diagram 2 (Read TEMT6000 Sensor Data), at a higher level of abstraction (GPIO details omitted). The DHT11 and TEMT6000 tests run in parallel (fork/join). If both sensors are connected, the ESP32 reads both sensors in parallel (fork/join) and prepares the readings to be sent. If at least one sensor is not connected, the ESP32 collects the status of both sensors in parallel (fork/join) and reports the sensor fault. The two outcome branches mirror each other.
@@ -83,7 +87,7 @@ stateDiagram-v2
 ```
 
 ---
-## Diagram 2: Connection Request & Device Scan
+## Diagram 3: Connection Request & Device Scan
 
 Based on Sequence Diagram 1 (Request Connection Flow) and Sequence Diagram 4 (Device Scan Flow). After the user opens the app, a decision selects which action the user takes: request a connection (left branch) or request a device scan (right branch). The two paths merge again before the end.
 
@@ -182,7 +186,7 @@ stateDiagram-v2
     merge_outer --> [*]
 ```
 
-## Diagram 8 - Environmental Data Synchronization
+## Diagram 6 - Environmental Data Synchronization
 ```mermaid
 stateDiagram-v2
     direction TB
@@ -222,3 +226,172 @@ stateDiagram-v2
     merge_final --> [*]
 
 ```
+---
+## Diagram 1 - Dashboard Readings and Alert Flow
+> Eng. Omar Emad
+
+```mermaid
+stateDiagram-v2
+    direction TB
+
+    state "User Opens Dashboard" as OpenDash
+    state "Users select data type" as SelectType
+    state data_type_choice <<choice>>
+
+    %% Left Branch (Current Readings)
+    state "Request Current Data from API" as ReqCurrent
+    state "Receive Current Readings" as RecCurrent
+    state "Display Current Readings" as DispCurrent
+    state "Compare Readings with Thresholds" as CompThresh
+    state thresh_choice <<choice>>
+    state "don't perform any thing" as DoNothing
+    state fork_alert <<fork>>
+    state "store this readings to database" as StoreReadings
+    state "Generate alert to user" as GenAlert
+    state join_alert <<join>>
+
+    %% Right Branch (Historical Readings)
+    state "User select the selected period" as SelectPeriod
+    state "Check the selected period contain readings or not" as CheckPeriod
+    state data_avail_choice <<choice>>
+    state "Print no readings available in this period" as PrintNoData
+    state "display historical readings" as DispHist
+    state merge_hist <<choice>>
+
+    [*] --> OpenDash
+    OpenDash --> SelectType
+    SelectType --> data_type_choice
+
+    %% Current Readings Path
+    data_type_choice --> ReqCurrent : [User select to show current readings]
+    ReqCurrent --> RecCurrent
+    RecCurrent --> DispCurrent
+    DispCurrent --> CompThresh
+    CompThresh --> thresh_choice
+
+    thresh_choice --> DoNothing : [If readings don't exceed thresholds]
+    thresh_choice --> fork_alert : [If readings exceed thresholds]
+
+    fork_alert --> StoreReadings
+    fork_alert --> GenAlert
+    StoreReadings --> join_alert
+    GenAlert --> join_alert
+
+    DoNothing --> [*]
+    join_alert --> [*]
+
+    %% Historical Readings Path
+    data_type_choice --> SelectPeriod : [User select to show historical readings]
+    SelectPeriod --> CheckPeriod
+    CheckPeriod --> data_avail_choice
+
+    data_avail_choice --> PrintNoData : no available data
+    data_avail_choice --> DispHist : Data is available
+
+    PrintNoData --> merge_hist
+    DispHist --> merge_hist
+    merge_hist --> [*]
+```
+## Diagram 4 - Handling multiple threshold violations 
+
+```mermaid
+stateDiagram-v2
+    direction TB
+
+    state "Read current readings" as ReadReadings
+    state "Load alert thresholds" as LoadThresh
+    state "Compare readings with thresholds" as CompThresh
+    state violation_choice <<choice>>
+
+    state "Create violations list" as CreateList
+    state loop_merge <<choice>>
+    state more_violations_choice <<choice>>
+    state "Get next violations" as GetNext
+    state "Classify severity(low,medium,high)" as ClassifySev
+
+    state "sort violations by severity" as SortViolations
+    state "Combine violation in one alert" as CombineAlert
+    state fork_process <<fork>>
+    state "store violations in database" as StoreViolations
+    state "Send combined alert to user" as SendAlert
+    state join_process <<join>>
+
+    [*] --> ReadReadings
+    ReadReadings --> LoadThresh
+    LoadThresh --> CompThresh
+    CompThresh --> violation_choice
+
+    violation_choice --> [*] : No violation found
+    violation_choice --> CreateList : [Violations found]
+
+    CreateList --> loop_merge
+    loop_merge --> more_violations_choice
+
+    more_violations_choice --> GetNext : Yes (More unprocessed violations)
+    GetNext --> ClassifySev
+    ClassifySev --> loop_merge
+
+    more_violations_choice --> SortViolations : NO
+    SortViolations --> CombineAlert
+    CombineAlert --> fork_process
+
+    fork_process --> StoreViolations
+    fork_process --> SendAlert
+    StoreViolations --> join_process
+    SendAlert --> join_process
+
+    join_process --> [*]
+```
+---
+## Diagram 7 - Environmental Monitoring session life cycle
+> Eng. Omar Tamer
+
+```mermaid
+stateDiagram-v2
+    direction TB
+
+    state "Initialization" as Init
+    state init_choice <<choice>>
+    state "Terminate" as Term
+    state "Start" as StartNode
+
+    state fork_main <<fork>>
+    
+    %% Left Parallel Branch
+    state "Collect data" as Collect
+    state "Process data" as Process
+
+    %% Right Parallel Branch
+    state "Await connection" as AwaitConn
+    state conn_choice <<choice>>
+
+    state join_main <<join>>
+    state "Send data" as SendData
+
+    [*] --> Init
+    Init --> init_choice : Initialization success
+
+    init_choice --> Term : [No]
+    Term --> [*]
+
+    init_choice --> StartNode : [Yes]
+    StartNode --> fork_main
+
+    %% Left Branch Flow
+    fork_main --> Collect
+    Collect --> Process
+    Process --> join_main
+
+    %% Right Branch Flow
+    fork_main --> AwaitConn
+    AwaitConn --> conn_choice : Connection established
+    conn_choice --> AwaitConn : [No]
+    conn_choice --> join_main : [Yes]
+
+    %% Join and Loop Back
+    join_main --> SendData
+    SendData --> StartNode
+```
+
+
+
